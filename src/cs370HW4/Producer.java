@@ -21,8 +21,7 @@ public class Producer implements Runnable {
 	}
 
 	public void printCumVal() {
-		System.out.println("Producer: Produced " + prodNum
-				+ " items, Cumulative value of produced items=" + prodSum);
+		System.out.printf("Producer: Produced %d items,  Cumulative value of produced items=%f\n", prodNum, prodSum);
 	}
 
 	public int getProdNum() {
@@ -32,13 +31,7 @@ public class Producer implements Runnable {
 	@Override
 	public void run() {
 
-		while (this.getProdNum() <= 10000) {
-			// try {
-			// buffer.produceConsume();
-			// } catch (InterruptedException e) {
-			// e.printStackTrace();
-			// }
-			//
+		while (this.getProdNum() <= 1000000) {
 			switch (this.getProdNum()) {
 			case 100000:
 			case 200000:
@@ -55,15 +48,10 @@ public class Producer implements Runnable {
 				break;
 			default:
 				buffer.produce();
-				this.printCumVal();
-//				buffer.printout();
-//				System.out.println("-----------------------");
-				// System.out.println("Current ran = " + newElement);
 				break;
 			}
 		}
-//		System.out.println("Producer: Finished generating 1,000,000 items");
-		// buffer.printout();
+		System.out.println("Producer: Finished generating 1,000,000 items");		
 	}
 	
 }

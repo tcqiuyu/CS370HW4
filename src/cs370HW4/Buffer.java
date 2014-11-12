@@ -24,18 +24,12 @@ public class Buffer {
 		consumer = c;
 	}
 
-	public void printout() {
-		for (int i = 0; i < BUFFER_SIZE; i++) {
-			System.out.println("Index " + i + "=" + buffer[i]);
-		}
-	}
-
 	public void produce() {
 
 		if ((in + 1) % BUFFER_SIZE == out) {// if buffer is full
-			synchronized (producer) {
+			synchronized (this) {//not synchronized(producer)
 				try {
-					producer.wait();
+					wait();//not producer.wait()
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -43,14 +37,11 @@ public class Buffer {
 			}
 		} else {// otherwise
 
-			synchronized (consumer) {
+			synchronized (this) {
 				double newElement = producer.generateElement();
 				buffer[in] = newElement;
 				in = (in + 1) % BUFFER_SIZE;
-//				for (int i = 0; i < BUFFER_SIZE; i++) {
-//					System.out.println("Produce No. "+producer.getProdNum()+"----"+"Index " + i + "=" + buffer[i]);
-//				}
-				consumer.notify();
+				notifyAll();
 			}
 		}
 	}
@@ -58,22 +49,19 @@ public class Buffer {
 	public Double consume() {
 		Double temp = null;
 		if (in == out) {// if buffer is empty
-			synchronized (consumer) {
+			synchronized (this) {
 				try {
-					consumer.wait();
+					wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 		} else {
-			synchronized (producer) {
+			synchronized (this) {
 				temp = buffer[out];
 				buffer[out] = null;
 				out = (out + 1) % BUFFER_SIZE;
-//				for (int i = 0; i < BUFFER_SIZE; i++) {
-//					System.out.println("Consume No. "+consumer.getConsNum()+"----"+"Index " + i + "=" + buffer[i]);
-//				}
-				producer.notify();
+				notifyAll();
 			}
 		}
 		return temp;
@@ -84,6 +72,11 @@ public class Buffer {
 		cthread = new Thread(consumer);
 		pthread.start();
 		cthread.start();
+		try {
+			pthread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void add(int index, Double newElement) {

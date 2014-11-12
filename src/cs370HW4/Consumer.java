@@ -15,19 +15,13 @@ public class Consumer implements Runnable {
 	}
 
 	public void printCumVal() {
-		System.out.println("Consumer: Consumed " + extractNum
-				+ " items, Cumulative value of consumed items=" + extractSum);
+		System.out.printf("Consumer: Consumed %d items,  Cumulative value of consumed items=%f\n", extractNum, extractSum);
 	}
 
 	@Override
 	public void run() {
 		Double extractElement;
-		while (this.getConsNum() <= 10000) {
-			// try {
-			// buffer.produceConsume();
-			// } catch (InterruptedException e) {
-			// e.printStackTrace();
-			// }
+		while (this.getConsNum() <= 1000000) {
 
 			switch (this.getConsNum()) {
 			case 100000:
@@ -53,12 +47,11 @@ public class Consumer implements Runnable {
 					extractSum += extractElement;
 					extractNum++;
 				}
-				 this.printCumVal();
-				// buffer.printout();
-				// System.out.println("-----------------------");
+//				 this.printCumVal();
 				break;
 			}
 		}
-//		System.out.println("Consumer: Finished consuming 1,000,000 items");
+		System.out.println("Consumer: Finished consuming 1,000,000 items");
+		System.out.println("Exiting!");
 	}
 }
