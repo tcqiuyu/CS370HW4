@@ -5,7 +5,7 @@ public class Buffer {
 	private static final int BUFFER_SIZE = 10;
 
 	private Double[] buffer;
-	private int in, out, num;
+	private int in, out;
 
 	private Producer producer;
 	private Consumer consumer;
@@ -24,37 +24,13 @@ public class Buffer {
 		consumer = c;
 	}
 
-	// public void produceConsume() throws InterruptedException {
-	//
-	// synchronized (pthread) {
-	// while ((in + 1) % BUFFER_SIZE == out) // if buffer is full
-	// {
-	// System.out.println("pthread wait");
-	// pthread.wait();
-	// }
-	// System.out.println("pthread out");
-	// // pthread.notify();
-	// }
-	//
-	// synchronized (cthread) {
-	// while (in == out) // if buffer is empty
-	// {
-	// System.out.println("cthread wait");
-	// cthread.wait();
-	// }
-	//
-	// cthread.notify();
-	// }
-	//
-	// }
-
 	public void printout() {
 		for (int i = 0; i < BUFFER_SIZE; i++) {
-			System.out.println(buffer[i]);
+			System.out.println("Index " + i + "=" + buffer[i]);
 		}
 	}
 
-	public void produce(int index, Double newElement) {
+	public void produce(Double newElement) {
 
 		if ((in + 1) % BUFFER_SIZE == out) {// if buffer is full
 			synchronized (producer) {
@@ -63,14 +39,23 @@ public class Buffer {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+
 			}
 		} else {// otherwise
-			buffer[index] = newElement;
-			in = (in + 1) % BUFFER_SIZE;
+
+			synchronized (consumer) {
+				buffer[in] = newElement;
+				in = (in + 1) % BUFFER_SIZE;
+				for (int i = 0; i < BUFFER_SIZE; i++) {
+					System.out.print("Produce No. "+producer.getProdNum()+"----");
+					System.out.println("Index " + i + "=" + buffer[i]);
+				}
+				consumer.notify();
+			}
 		}
 	}
 
-	public Double consume(int index) {
+	public Double consume() {
 		Double temp = null;
 		if (in == out) {// if buffer is empty
 			synchronized (consumer) {
@@ -81,9 +66,16 @@ public class Buffer {
 				}
 			}
 		} else {
-			temp = buffer[index];
-			buffer[index] = null;
-			out = (out + 1) % BUFFER_SIZE;
+			synchronized (producer) {
+				temp = buffer[out];
+				buffer[out] = null;
+				out = (out + 1) % BUFFER_SIZE;
+				for (int i = 0; i < BUFFER_SIZE; i++) {
+					System.out.print("Consume No. "+consumer.getConsNum()+"----");
+					System.out.println("Index " + i + "=" + buffer[i]);
+				}
+				producer.notify();
+			}
 		}
 		return temp;
 	}
@@ -93,14 +85,6 @@ public class Buffer {
 		cthread = new Thread(consumer);
 		pthread.start();
 		cthread.start();
-	}
-
-	public int getIn() {
-		return in;
-	}
-
-	public int getOut() {
-		return out;
 	}
 
 	public void add(int index, Double newElement) {

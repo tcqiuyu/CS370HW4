@@ -14,23 +14,21 @@ public class Consumer implements Runnable {
 		return extractNum;
 	}
 
-
-
 	public void printCumVal() {
-		System.out.println("Consumer: Consumed " + extractNum + " items, Cummulative value of consumed items="
-				+ extractSum + "\n");
+		System.out.println("Consumer: Consumed " + extractNum
+				+ " items, Cumulative value of consumed items=" + extractSum);
 	}
 
 	@Override
-	public void run() {			
+	public void run() {
 		Double extractElement;
-		while (this.getConsNum() <= 10) {
-//			try {
-//				buffer.produceConsume();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-			
+		while (this.getConsNum() <= 30) {
+			// try {
+			// buffer.produceConsume();
+			// } catch (InterruptedException e) {
+			// e.printStackTrace();
+			// }
+
 //			switch (this.getConsNum()) {
 //			case 100000:
 //			case 200000:
@@ -42,19 +40,25 @@ public class Consumer implements Runnable {
 //			case 800000:
 //			case 900000:
 //			case 1000000:
-//				this.printCumVal();
-//				extractElement = buffer.remove(buffer.getOut());
-//				extractSum += extractElement;
-//				extractNum++;
+//				extractElement = buffer.consume();
+//				if (extractElement != null) {
+//					this.printCumVal();
+//					extractSum += extractElement;
+//					extractNum++;
+//				}
 //				break;
-//			default: 
-				extractElement = buffer.consume(buffer.getOut());
-				extractSum += extractElement;
-				extractNum++;
-				this.printCumVal();
+//			default:
+				extractElement = buffer.consume();
+				if (extractElement != null) {
+					extractSum += extractElement;
+					extractNum++;
+				}
+				 this.printCumVal();
+				// buffer.printout();
+				// System.out.println("-----------------------");
 //				break;
-//			}	
+//			}
 		}
-		
+//		System.out.println("Consumer: Finished consuming 1,000,000 items");
 	}
 }

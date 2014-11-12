@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Producer implements Runnable {
 
-	private Double prodSum = 0.0;
+	private double prodSum = 0.0;
 	private int prodNum = 0;
 	private Buffer buffer;
 
@@ -21,8 +21,8 @@ public class Producer implements Runnable {
 	}
 
 	public void printCumVal() {
-		System.out.println("Producer: Produced " + prodNum + " items, Cummulative value of produced items=" + prodSum
-				+ "\n");
+		System.out.println("Producer: Produced " + prodNum
+				+ " items, Cumulative value of produced items=" + prodSum);
 	}
 
 	public int getProdNum() {
@@ -33,38 +33,40 @@ public class Producer implements Runnable {
 	public void run() {
 
 		Double newElement;
-		while (this.getProdNum() < 10) {
+		while (this.getProdNum() <= 1000000) {
 			// try {
 			// buffer.produceConsume();
 			// } catch (InterruptedException e) {
 			// e.printStackTrace();
 			// }
 			//
-			// switch (this.getProdNum()) {
-			// case 100000:
-			// case 200000:
-			// case 300000:
-			// case 400000:
-			// case 500000:
-			// case 600000:
-			// case 700000:
-			// case 800000:
-			// case 900000:
-			// case 1000000s:
-			// this.printCumVal();
-			// newElement = this.generateElement();
-			// buffer.add(buffer.getIn(), newElement);
-			// break;
-			// default:
-				
+//			switch (this.getProdNum()) {
+//			case 100000:
+//			case 200000:
+//			case 300000:
+//			case 400000:
+//			case 500000:
+//			case 600000:
+//			case 700000:
+//			case 800000:
+//			case 900000:
+//			case 1000000:
+//				this.printCumVal();
+//				newElement = this.generateElement();
+//				buffer.produce(newElement);
+//				break;
+//			default:
 				newElement = this.generateElement();
-				buffer.produce(buffer.getIn(), newElement);
+				buffer.produce(newElement);
 				this.printCumVal();
-			// System.out.println("Current ran = " + newElement);
-			// break;
-			// }
+//				buffer.printout();
+//				System.out.println("-----------------------");
+				// System.out.println("Current ran = " + newElement);
+//				break;
+//			}
 		}
-		// System.out.println(this.getProdNum());
+//		System.out.println("Producer: Finished generating 1,000,000 items");
 		// buffer.printout();
 	}
+	
 }
