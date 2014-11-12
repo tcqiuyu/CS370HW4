@@ -2,7 +2,7 @@ package cs370HW4;
 
 public class Buffer {
 
-	private static final int BUFFER_SIZE = 10;
+	private static final int BUFFER_SIZE = 1000;
 
 	private Double[] buffer;
 	private int in, out;
@@ -30,7 +30,7 @@ public class Buffer {
 		}
 	}
 
-	public void produce(Double newElement) {
+	public void produce() {
 
 		if ((in + 1) % BUFFER_SIZE == out) {// if buffer is full
 			synchronized (producer) {
@@ -44,12 +44,12 @@ public class Buffer {
 		} else {// otherwise
 
 			synchronized (consumer) {
+				double newElement = producer.generateElement();
 				buffer[in] = newElement;
 				in = (in + 1) % BUFFER_SIZE;
-				for (int i = 0; i < BUFFER_SIZE; i++) {
-					System.out.print("Produce No. "+producer.getProdNum()+"----");
-					System.out.println("Index " + i + "=" + buffer[i]);
-				}
+//				for (int i = 0; i < BUFFER_SIZE; i++) {
+//					System.out.println("Produce No. "+producer.getProdNum()+"----"+"Index " + i + "=" + buffer[i]);
+//				}
 				consumer.notify();
 			}
 		}
@@ -70,10 +70,9 @@ public class Buffer {
 				temp = buffer[out];
 				buffer[out] = null;
 				out = (out + 1) % BUFFER_SIZE;
-				for (int i = 0; i < BUFFER_SIZE; i++) {
-					System.out.print("Consume No. "+consumer.getConsNum()+"----");
-					System.out.println("Index " + i + "=" + buffer[i]);
-				}
+//				for (int i = 0; i < BUFFER_SIZE; i++) {
+//					System.out.println("Consume No. "+consumer.getConsNum()+"----"+"Index " + i + "=" + buffer[i]);
+//				}
 				producer.notify();
 			}
 		}

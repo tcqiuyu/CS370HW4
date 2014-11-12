@@ -12,7 +12,7 @@ public class Producer implements Runnable {
 		buffer = b;
 	}
 
-	private Double generateElement() {
+	public Double generateElement() {
 		Random random = new Random();
 		Double bufferElement = random.nextDouble() * 100.0;
 		prodSum += bufferElement;
@@ -32,38 +32,35 @@ public class Producer implements Runnable {
 	@Override
 	public void run() {
 
-		Double newElement;
-		while (this.getProdNum() <= 1000000) {
+		while (this.getProdNum() <= 10000) {
 			// try {
 			// buffer.produceConsume();
 			// } catch (InterruptedException e) {
 			// e.printStackTrace();
 			// }
 			//
-//			switch (this.getProdNum()) {
-//			case 100000:
-//			case 200000:
-//			case 300000:
-//			case 400000:
-//			case 500000:
-//			case 600000:
-//			case 700000:
-//			case 800000:
-//			case 900000:
-//			case 1000000:
-//				this.printCumVal();
-//				newElement = this.generateElement();
-//				buffer.produce(newElement);
-//				break;
-//			default:
-				newElement = this.generateElement();
-				buffer.produce(newElement);
+			switch (this.getProdNum()) {
+			case 100000:
+			case 200000:
+			case 300000:
+			case 400000:
+			case 500000:
+			case 600000:
+			case 700000:
+			case 800000:
+			case 900000:
+			case 1000000:
+				this.printCumVal();
+				buffer.produce();
+				break;
+			default:
+				buffer.produce();
 				this.printCumVal();
 //				buffer.printout();
 //				System.out.println("-----------------------");
 				// System.out.println("Current ran = " + newElement);
-//				break;
-//			}
+				break;
+			}
 		}
 //		System.out.println("Producer: Finished generating 1,000,000 items");
 		// buffer.printout();
